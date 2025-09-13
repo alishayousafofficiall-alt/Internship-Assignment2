@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Weather Application</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+<link rel="stylesheet" href="style.css">
+
+</head>
+<body>
+
+  <!-- Random Water Drops -->
+  <div class="drops" id="drops"></div>
+
+  <!-- Center Content -->
+  <div class="container">
+     <h2>
+    Welcome to the Weather App<br>
+    Check today's forecast<br>
+    And enjoy the view
+  </h2>
+    <div class="illustration">
+      <img src="images/1.png" alt="Weather Illustration">
+    </div>
+    <button id="nextBtn">Start</button>
+
+
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      //  water drops
+      const dropsContainer = document.getElementById("drops");
+      const totalDrops = 25; 
+
+      for (let i = 0; i < totalDrops; i++) {
+        const drop = document.createElement("div");
+        drop.classList.add("drop");
+        drop.style.top = Math.random() * 100 + "vh";
+        drop.style.left = Math.random() * 100 + "vw";
+        drop.style.width = drop.style.height = (8 + Math.random() * 8) + "px";
+        drop.style.animationDuration = (4 + Math.random() * 4) + "s";
+        drop.style.animationDelay = (Math.random() * 4) + "s";
+        dropsContainer.appendChild(drop);
+      }
+
+      //  button 
+      document.getElementById('nextBtn').addEventListener('click', function() {
+        window.location.href = 'secondpage.html';
+      });
+    });
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact Weather App</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+<link rel="stylesheet" href="style.css">
+
+</head>
+<body>
+
+<div class="drops" id="drops"></div>
+<nav class="navbar">
+  <div class="navbar-left">
+     <i class="bi bi-cloud-sun-fill" style="font-size: 1.5rem;"></i>
+    <span class="logo">Weatherly</span>
+  </div>
+
+  <div class="navbar-center">
+    <a href="index.html">Home</a>
+    <a href="usage-guide.html">Usage Guide</a>
+    <a href="about.html">About</a>
+    <a href="contact.html">Contact</a>
+  </div>
+
+  <div class="navbar-right">
+    <a href="signin.html" class="signin">Sign In</a>
+    <a href="signup.html" class="signup">Sign Up</a>
+  </div>
+</nav>
+
+<main>
+  <h1><i class="bi bi-person-lines-fill"></i> Contact Us</h1>
+
+  <div class="section">
+    <h2>Get in Touch</h2>
+    <p>Have questions or feedback? Send us a message and we'll get back to you shortly!</p>
+    <form id="contactForm" onsubmit="return handleSubmit(event)">
+      <input type="text" name="name" placeholder="Your Name" required>
+      <input type="email" name="email" placeholder="Your Email" required>
+      <textarea name="message" placeholder="Your Message" required></textarea>
+      <button type="submit">Send Message</button>
+    </form>
+    <div id="confirmation"></div>
+  </div>
+</main>
+
+<footer>
+  <p><i class="bi bi-cloud"></i> Weather App © 2025 | Data by OpenWeather | Images by Unsplash</p>
+  <p><a href="about.html" style="color:#fff; text-decoration:none;">About</a> | 
+     <a href="contact.html" style="color:#fff; text-decoration:none;">Contact</a></p>
+</footer>
+
+<script>
+  // Floating drops
+  document.addEventListener("DOMContentLoaded", function() {
+    const dropsContainer = document.getElementById("drops");
+    for (let i = 0; i < 25; i++) {
+      const drop = document.createElement("div");
+      drop.classList.add("drop");
+      drop.style.top = Math.random() * 100 + "vh";
+      drop.style.left = Math.random() * 100 + "vw";
+      drop.style.width = drop.style.height = (8 + Math.random() * 8) + "px";
+      drop.style.animationDuration = (4 + Math.random() * 4) + "s";
+      drop.style.animationDelay = (Math.random() * 4) + "s";
+      dropsContainer.appendChild(drop);
+    }
+  });
+
+  // Handle form submit
+  function handleSubmit(event) {
+    event.preventDefault();
+    const confirmationDiv = document.getElementById("confirmation");
+confirmationDiv.innerHTML = '<i class="bi bi-check-circle-fill"></i> Your message has been submitted!';
+
+    event.target.reset();
+    return false;
+  }
+</script>
+
+</body>
+</html>

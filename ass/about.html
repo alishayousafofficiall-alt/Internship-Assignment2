@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About Weather App</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+<link rel="stylesheet" href="style.css">
+
+</head>
+<body>
+
+<div class="drops" id="drops"></div>
+
+<nav class="navbar">
+  <div class="navbar-left">
+     <i class="bi bi-cloud-sun-fill" style="font-size: 1.5rem;"></i>
+    <span class="logo">Weatherly</span>
+  </div>
+
+  <div class="navbar-center">
+    <a href="index.html">Home</a>
+    <a href="usage-guide.html">Usage Guide</a>
+    <a href="about.html">About</a>
+    <a href="contact.html">Contact</a>
+  </div>
+
+  <div class="navbar-right">
+    <a href="signin.html" class="signin">Sign In</a>
+    <a href="signup.html" class="signup">Sign Up</a>
+  </div>
+</nav>
+
+
+<main>
+  <h1><i class="bi bi-cloud"></i> About Weather App</h1>
+
+  <div class="section">
+    <h2>Our Mission</h2>
+    <p>The Weather App provides accurate and real-time weather updates for cities worldwide. Our goal is to make weather information simple, quick, and visually appealing.</p>
+  </div>
+
+  <div class="section">
+    <h2>Features</h2>
+    <ul>
+      <li>Real-time temperature, humidity, and weather conditions.</li>
+      <li>Dynamic weather icons and background images.</li>
+      <li>User-friendly interface for all devices.</li>
+      <li>Backgrounds powered by Unsplash API.</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>Why Choose Us?</h2>
+    <p>Combining simplicity with aesthetics, our app ensures that weather info is easy to read and visually pleasing for work, travel, or leisure.</p>
+  </div>
+
+  <div class="section">
+    <h2>Contact & Support</h2>
+    <p>Email us at <code>support@weatherapp.com</code> for questions or feedback.</p>
+    <button onclick="window.location.href='contact.html'">Contact Us</button>
+  </div>
+</main>
+
+<footer>
+  <p><i class="bi bi-cloud"></i> Weather App © 2025 | Data by OpenWeather | Images by Unsplash</p>
+  <p><a href="about.html" style="color:#fff; text-decoration:none;">About</a> | 
+     <a href="contact.html" style="color:#fff; text-decoration:none;">Contact</a></p>
+</footer>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const dropsContainer = document.getElementById("drops");
+    for (let i = 0; i < 25; i++) {
+      const drop = document.createElement("div");
+      drop.classList.add("drop");
+      drop.style.top = Math.random() * 100 + "vh";
+      drop.style.left = Math.random() * 100 + "vw";
+      drop.style.width = drop.style.height = (8 + Math.random() * 8) + "px";
+      drop.style.animationDuration = (4 + Math.random() * 4) + "s";
+      drop.style.animationDelay = (Math.random() * 4) + "s";
+      dropsContainer.appendChild(drop);
+    }
+  });
+</script>
+
+</body>
+</html>

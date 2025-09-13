@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Weather App </title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+<link rel="stylesheet" href="style.css">
+
+
+</head>
+<body>
+<div class="drops" id="drops"></div>
+<nav class="navbar">
+  <div class="navbar-left">
+     <i class="bi bi-cloud-sun-fill" style="font-size: 1.5rem;"></i>
+    <span class="logo">Weatherly</span>
+  </div>
+
+  <div class="navbar-center">
+    <a href="index.html">Home</a>
+    <a href="usage-guide.html">Usage Guide</a>
+    <a href="about.html">About</a>
+    <a href="contact.html">Contact</a>
+  </div>
+
+  <div class="navbar-right">
+    <a href="signin.html" class="signin">Sign In</a>
+    <a href="signup.html" class="signup">Sign Up</a>
+  </div>
+</nav>
+
+
+<div class="container">
+ <div class="search-container">
+  <input type="text" placeholder="Search weather..." class="search-input" id="city">
+  <button class="search-button" onclick="searchWeather()"><i class="bi bi-search-heart"></i></button>
+</div>
+
+
+<button onclick="getLocationWeather()">Use My Location</button>
+  <div id="welcome" style="text-align:center; margin-top:30px;">
+    <img src="images/2.png" alt="Welcome" style="width:400px; height:400px; margin-bottom:10px;">
+    <h1>Search above or use location to get live weather updates.</h1>
+  </div>
+
+  
+
+  <div id="weather"></div>
+  <div id="forecast"></div>
+</div>
+  <footer>
+  <p><i class="bi bi-cloud"></i>Weather App © 2025 | Data by OpenWeather | Images by Unsplash</p>
+  <p><a href="about.html" style="color:#fff; text-decoration:none;">About</a> | 
+     <a href="contact.html" style="color:#fff; text-decoration:none;">Contact</a></p>
+</footer>
+
+<script>
+   
+const dropsContainer = document.getElementById("drops");
+
+// Create animated drops
+for (let i = 0; i < 50; i++) {
+  const drop = document.createElement("div");
+  drop.classList.add("drop");
+  drop.style.top = Math.random() * 100 + "vh";
+  drop.style.left = Math.random() * 100 + "vw";
+  drop.style.width = drop.style.height = (8 + Math.random() * 8) + "px";
+  drop.style.animationDuration = (4 + Math.random() * 4) + "s";
+  drop.style.animationDelay = (Math.random() * 4) + "s";
+  dropsContainer.appendChild(drop);
+}
+
+// API keys
+const weatherApiKey = "8f7fdb8e424eabf79e342f02ddd70d8b"; // OpenWeather API
+const unsplashKey= "_n12xWxxqAdrHGpQVGsyYpKGm6koTNP7c8F0YGddpG8"; // Unsplash API
+
+// Page background
+async function setBackground(condition) {
+  try {
+    const res = await fetch(`https://api.unsplash.com/photos/random?query=${encodeURIComponent(condition)}&client_id=${unsplashKey}`);
+    const data = await res.json();
+    document.body.style.backgroundImage = `url('${data.urls.regular}')`;
+  } catch {
+    let keyword = "weather";
+    if (condition.toLowerCase().includes("clear")) keyword = "sunny sky";
+    else if (condition.toLowerCase().includes("cloud")) keyword = "cloudy sky";
+    else if (condition.toLowerCase().includes("rain")) keyword = "rain";
+    else if (condition.toLowerCase().includes("snow")) keyword = "snow";
+    else if (condition.toLowerCase().includes("storm")) keyword = "storm";
+    document.body.style.backgroundImage = `url('https://source.unsplash.com/1600x900/?${keyword}&sig=${Math.random()}')`;
+  }
+}
+
+//  Forecast card background
+async function getCardBackground(condition) {
+  try {
+    const res = await fetch(`https://api.unsplash.com/photos/random?query=${encodeURIComponent(condition)}&client_id=${unsplashKey}`);
+    const data = await res.json();
+    return `url('${data.urls.small}')`;
+  } catch {
+    let keyword = "weather";
+    if (condition.toLowerCase().includes("clear")) keyword = "sunny sky";
+    else if (condition.toLowerCase().includes("cloud")) keyword = "cloudy sky";
+    else if (condition.toLowerCase().includes("rain")) keyword = "rain";
+    else if (condition.toLowerCase().includes("snow")) keyword = "snow";
+    else if (condition.toLowerCase().includes("storm")) keyword = "storm";
+    return `url('https://source.unsplash.com/160x160/?${keyword}&sig=${Math.random()}')`;
+  }
+}
+
+//  Icons
+function getWeatherIcon(main) {
+  switch(main.toLowerCase()) {
+    case "clear": return "wb_sunny";
+    case "clouds": return "cloud";
+    case "rain": return "umbrella";
+    case "snow": return "ac_unit";
+    case "thunderstorm": return "flash_on";
+    case "mist":
+    case "fog": return "foggy";
+    default: return "wb_sunny";
+  }
+}
+
+// Search weather by city
+async function searchWeather() {
+  const city = document.getElementById("city").value.trim();
+  if (!city) return alert("Enter a city name!");
+  const currentUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${weatherApiKey}`;
+  const forecastUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&units=metric&appid=${weatherApiKey}`;
+  await fetchWeather(currentUrl, forecastUrl);
+}
+
+//  Use geolocation
+async function getLocationWeather() {
+  if (!navigator.geolocation) return alert("Geolocation not supported");
+  navigator.geolocation.getCurrentPosition(async pos => {
+    const { latitude, longitude } = pos.coords;
+    const currentUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&units=metric&appid=${weatherApiKey}`;
+    const forecastUrl = `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&units=metric&appid=${weatherApiKey}`;
+    await fetchWeather(currentUrl, forecastUrl);
+  }, () => alert("Location access denied"));
+}
+
+// Fetch and display weather
+async function fetchWeather(currentUrl, forecastUrl) {
+  try {
+    const currentRes = await fetch(currentUrl);
+    const currentData = await currentRes.json();
+    if (currentData.cod !== 200) {
+      document.getElementById("weather").innerHTML = `<p style="color:red"> ${currentData.message}</p>`;
+      document.getElementById("forecast").innerHTML = "";
+      return;
+    }
+
+    // Hide welcome section
+    const welcome = document.getElementById("welcome");
+    if (welcome) welcome.style.display = "none";
+
+    const { name, sys, main, weather, wind } = currentData;
+    const condition = weather[0].description;
+
+    setBackground(condition);
+    const weatherIcon = getWeatherIcon(weather[0].main);
+
+    // Current weather cards
+    document.getElementById("weather").innerHTML = `
+      <h2 style="text-align:center;">Weather for ${name}, ${sys.country}</h2>
+      <div class="weather-cards">
+
+        <div class="weather-card">
+          <h3><span class="material-icons">${weatherIcon}</span> Temperatures</h3>
+          <div class="value">${main.temp}°C</div>
+          <p>Min: ${main.temp_min}°C</p>
+          <p>Max: ${main.temp_max}°C</p>
+        </div>
+
+        <div class="weather-card">
+          <h3><span class="material-icons">water_drop</span> Humidity Info</h3>
+          <div class="value">${main.humidity}%</div>
+          <p>Feels Like: ${main.feels_like}°C</p>
+          <p>Condition: ${condition}</p>
+        </div>
+
+        <div class="weather-card">
+          <h3><span class="material-icons">air</span> Weather Info</h3>
+          <div class="value">${wind.speed} m/s</div>
+          <p>Wind Degree: ${wind.deg}°</p>
+          <p>Pressure: ${main.pressure} hPa</p>
+        </div>
+
+      </div>
+    `;
+
+    // Forecast (next 5 days) – loaded in parallel
+    const forecastRes = await fetch(forecastUrl);
+    const forecastData = await forecastRes.json();
+    const daily = {};
+    forecastData.list.forEach(item => {
+      const date = item.dt_txt.split(" ")[0];
+      if (!daily[date]) daily[date] = [];
+      daily[date].push(item);
+    });
+
+    const forecastCards = await Promise.all(
+      Object.keys(daily).slice(1,6).map(async date => {
+        const dayArr = daily[date];
+        const temps = dayArr.map(d => d.main.temp);
+        const minTemp = Math.min(...temps).toFixed(1);
+        const maxTemp = Math.max(...temps).toFixed(1);
+        const mid = dayArr[Math.floor(dayArr.length/2)];
+        const cond = mid.weather[0].main;
+        const icon = mid.weather[0].icon;
+        const dayName = new Date(date).toLocaleDateString("en-US",{ weekday: "long" });
+        const cardBg = await getCardBackground(cond);
+
+        return `
+          <div class="day" style="background-image:${cardBg}; background-size:cover; background-position:center;">
+            <h4>${dayName}</h4>
+            <img src="https://openweathermap.org/img/wn/${icon}@2x.png" alt="${cond}">
+            <p> ${minTemp}°C - ${maxTemp}°C</p>
+            <p> ${cond}</p>
+          </div>
+        `;
+      })
+    );
+
+    document.getElementById("forecast").innerHTML = forecastCards.join('');
+
+  } catch(err) {
+    console.error(err);
+    alert("⚠ Error fetching weather data: " + err.message);
+  }
+}
+
+
+</script>
